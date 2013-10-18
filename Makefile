@@ -6,6 +6,7 @@ VENDOR=ST
 PLAT=STM32F10x
 CMSIS_LIB=libraries/CMSIS/$(ARCH)
 STM32_LIB=libraries/STM32F10x_StdPeriph_Driver
+LOG_FILE=gdb.txt
 
 all: main.bin
 
@@ -43,10 +44,11 @@ gdbauto: main.bin
 	$(QEMU_STM32) -M stm32-p103 \
 		-gdb tcp::3333 -S \
 		-kernel main.bin -monitor null &
+	rm -f $(LOG_FILE)
 	$(CROSS_COMPILE)gdb -x gdb.in
 
 emu: main.bin
 	bash emulate.sh main.bin
 
 clean:
-	rm -f *.elf *.bin *.list
+	rm -f *.elf *.bin *.list $(LOG_FILE)

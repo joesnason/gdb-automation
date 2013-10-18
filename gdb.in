@@ -1,5 +1,7 @@
 file main.elf
 target remote :3333
+# enable log file, file name is gdb.txt
+set logging on
 set $osp = $sp
 set $sp = $sp - 16
 b main.c:4

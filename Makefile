@@ -47,7 +47,8 @@ gdbauto: main.bin
 		-gdb tcp::3333 -S \
 		-kernel main.bin -monitor null -serial file:$(QEMU_LOG)  &
 	sleep 1
-	$(CROSS_COMPILE)gdb -x gdb.in
+	$(CROSS_COMPILE)gdb -x gdb.in  && \
+	./check_result.sh
 
 emu: main.bin
 	bash emulate.sh main.bin

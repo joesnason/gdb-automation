@@ -7,6 +7,7 @@ PLAT=STM32F10x
 CMSIS_LIB=libraries/CMSIS/$(ARCH)
 STM32_LIB=libraries/STM32F10x_StdPeriph_Driver
 LOG_FILE=gdb.txt
+QEMU_LOG = qemu.log
 
 all: main.bin
 
@@ -41,10 +42,11 @@ qemudbg: main.bin
 		-gdb tcp::3333 -S \
 		-kernel main.bin
 gdbauto: main.bin
+	rm -f $(QEMU_LOG) $(LOG_FILE)
 	$(QEMU_STM32) -M stm32-p103 \
 		-gdb tcp::3333 -S \
-		-kernel main.bin -monitor null &
-	rm -f $(LOG_FILE)
+		-kernel main.bin -monitor null -serial file:$(QEMU_LOG)  &
+	sleep 1
 	$(CROSS_COMPILE)gdb -x gdb.in
 
 emu: main.bin

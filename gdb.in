@@ -3,7 +3,7 @@ target remote :3333
 # enable log file, file name is gdb.txt
 set logging on
 set $osp = $sp
-set $sp = $sp - 16
+set $sp = $sp - sizeof(GPIO_InitTypeDef) * 2 - sizeof(USART_InitTypeDef) * 2
 b main.c:5
 c
 call RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA | RCC_APB2Periph_AFIO, ENABLE)
@@ -25,8 +25,23 @@ set ((USART_InitTypeDef*)$osp)->USART_Mode = USART_Mode_Rx | USART_Mode_Tx
 call USART_Init(USART2, $osp)
 call USART_Cmd(USART2, ENABLE)
 c
+
 # send string "Hello" to UART
+set $get_osp = input_str
 while(*(input_str) !='\0')
 	call USART_SendData(USART2,*(input_str))
 	set input_str+=1
 end
+c
+
+# save the input data
+dump memory result $get_osp ($get_osp + 6)
+c
+
+# dump result test 
+#set $more_osp = $get_osp + 6
+#restore result binary $more_osp
+#while(*(char *)$more_osp !='\0')
+#    call USART_SendData(USART2,*(char *)$more_osp)
+#    set $more_osp+=1
+#end

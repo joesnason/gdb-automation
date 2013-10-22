@@ -26,7 +26,7 @@ call USART_Init(USART2, $osp)
 call USART_Cmd(USART2, ENABLE)
 c
 
-# send string "Hello" to UART
+# send string "Hello" to USART
 set $get_osp = input_str
 while(*(input_str) !='\0')
 	call USART_SendData(USART2,*(input_str))

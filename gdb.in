@@ -45,3 +45,7 @@ c
 #    call USART_SendData(USART2,*(char *)$more_osp)
 #    set $more_osp+=1
 #end
+
+# finish gdb script
+detach
+quit
